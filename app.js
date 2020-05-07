@@ -4,6 +4,15 @@ var bodyParser= require("body-parser");
 var seedDB = require("./seeds");
 var Venue = require("./models/venue");
 var Comment= require("./models/comment");
+var passport		= require("passport"),
+	LocalStrategy	= require("passport-local"),
+	User			= require("./models/user"),
+	passportLocalMongoose = require("passport-local-mongoose"),
+	middleware	= require("./middleware");
+var commentRoutes = require("./routes/comments"),
+	venueRoutes = require("./routes/venues"),
+	indexRoutes = require("./routes/index"),
+	methodOverride	= require("method-override");
 
 var app= express();
 app.use(express.static(__dirname + '/public'));
@@ -18,22 +27,26 @@ mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true, useFindA
 	});
 app.use(bodyParser.urlencoded({extended: true}));
 app.set("view engine", "ejs");
+app.use(methodOverride("_method"));
 
+// PASSPORT CONFIG
+app.use(require("express-session")({
+	secret: "We love our Negroniss",
+	resave: false,
+	saveUninitialized: false
+}))
+app.use(passport.initialize());
+app.use(passport.session());
+app.use(bodyParser.urlencoded({extended: true}));
 
-app.get("/", function(req, res){
-	res.render("landing")
-})
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
-app.get("/locations", function(req, res){
-	Venue.find({}, function(err, venue){
-		if(err){
-			console.log(err)
-		}else{
-			res.render("locations", {venue: venue})
-		}
-	})
-	
-})
+app.use("/venues", venueRoutes);
+app.use("/", indexRoutes);
+app.use("/venues/:id/comments", commentRoutes)
+
 
 //var PORTIP= (process.env.PORT, process.env.IP) || 3000
 //app.listen(process.env.PORT, process.env.IP, function(){
