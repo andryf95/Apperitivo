@@ -1,0 +1,27 @@
+.thumbnail img {
+	width: 100%;	
+}
+
+.thumbnail {
+	padding: 0;
+}
+
+.thumbnail .caption-full {
+	padding:9px;
+}
+
+.deleteForm {
+	display: inline;
+}
+body {
+	background-image: url(https://images.unsplash.com/photo-1564090654281-eb1db56d15fc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=500&q=60);
+	background-position: 50% 50%;
+	background-repeat: no-repeat;
+	color: white;
+}
+
+.jumbotron {
+	background-color: #84f542;
+	opacity: 0.7;
+	color: white;
+}
