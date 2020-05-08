@@ -15,6 +15,7 @@ var commentRoutes = require("./routes/comments"),
 	methodOverride	= require("method-override");
 
 var app= express();
+app.use(bodyParser.urlencoded({extended: true}));
 app.use(express.static(__dirname + '/public'));
 seedDB();
 
@@ -25,7 +26,7 @@ mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true, useFindA
 	}).catch(err =>{
 		console.log("ERROR:", err.message);
 	});
-app.use(bodyParser.urlencoded({extended: true}));
+
 app.set("view engine", "ejs");
 app.use(methodOverride("_method"));
 
@@ -37,7 +38,7 @@ app.use(require("express-session")({
 }))
 app.use(passport.initialize());
 app.use(passport.session());
-app.use(bodyParser.urlencoded({extended: true}));
+
 
 passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
